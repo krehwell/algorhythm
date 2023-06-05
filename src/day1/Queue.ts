@@ -1,14 +1,12 @@
-import { updateDo } from "typescript";
-
 type Node<T> = {
     value: T;
     next?: Node<T>;
 };
 
 export default class Queue<T> {
-    private head?: Node<T>;
-    private tail?: Node<T>;
     public length: number;
+    private head: Node<T> | undefined;
+    private tail: Node<T> | undefined;
 
     constructor() {
         this.head = this.tail = undefined;
@@ -16,8 +14,8 @@ export default class Queue<T> {
     }
 
     enqueue(item: T): void {
+        const newNode: Node<T> = { value: item };
         this.length++;
-        const newNode = { value: item } as Node<T>;
 
         if (!this.tail) {
             this.head = newNode;
@@ -25,7 +23,8 @@ export default class Queue<T> {
             return;
         }
 
-        this.tail.next = newNode;
+        const latestNode = this.tail as Node<T>;
+        latestNode.next = newNode;
         this.tail = newNode;
     }
 
@@ -36,19 +35,22 @@ export default class Queue<T> {
 
         this.length--;
 
-        const currHead = this.head;
-        this.head = this.head.next;
-
-        currHead.next = undefined;
+        const head = this.head;
+        this.head = head.next;
+        head.next = undefined;
 
         if (this.length === 0) {
             this.tail = undefined;
         }
 
-        return currHead.value;
+        return head.value;
     }
 
     peek(): T | undefined {
-        return this.head?.value;
+        if (!this.head) {
+            return undefined;
+        }
+
+        return this.head.value;
     }
 }
