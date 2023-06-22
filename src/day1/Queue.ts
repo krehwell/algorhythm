@@ -23,8 +23,7 @@ export default class Queue<T> {
             return;
         }
 
-        const latestNode = this.tail as Node<T>;
-        latestNode.next = newNode;
+        this.tail.next = newNode;
         this.tail = newNode;
     }
 
