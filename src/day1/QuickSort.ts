@@ -1,10 +1,18 @@
 const swap = (arr: number[], i: number, j: number) => {
-    const tmp = arr[i];
+    const temp = arr[i];
     arr[i] = arr[j];
-    arr[j] = tmp;
+    arr[j] = temp;
 };
 
-const partition = (arr: number[], lo: number, hi: number): number => {
+const getPivot = ({
+    arr,
+    lo,
+    hi,
+}: {
+    arr: number[];
+    lo: number;
+    hi: number;
+}) => {
     let swapIndex = lo - 1;
 
     for (let i = lo; i <= hi; i++) {
@@ -17,14 +25,14 @@ const partition = (arr: number[], lo: number, hi: number): number => {
     return swapIndex;
 };
 
-const sort = (arr: number[], lo: number, hi: number) => {
+const sort = ({ arr, lo, hi }: { arr: number[]; lo: number; hi: number }) => {
     if (lo < hi) {
-        let pivot = partition(arr, lo, hi);
-        sort(arr, pivot + 1, hi);
-        sort(arr, lo, pivot - 1);
+        const pivot = getPivot({ arr, lo, hi });
+        sort({ arr, lo: pivot + 1, hi });
+        sort({ arr, lo, hi: pivot - 1 });
     }
 };
 
 export default function quick_sort(arr: number[]): void {
-    sort(arr, 0, arr.length - 1);
+    sort({ arr, lo: 0, hi: arr.length - 1 });
 }
