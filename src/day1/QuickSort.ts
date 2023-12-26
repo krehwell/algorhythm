@@ -1,38 +1,38 @@
-const swap = (arr: number[], i: number, j: number) => {
+const swap = (i: number, j: number, arr: number[]) => {
     const temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
 };
 
 const getPivot = ({
-    arr,
     lo,
     hi,
+    arr,
 }: {
-    arr: number[];
     lo: number;
     hi: number;
+    arr: number[];
 }) => {
     let swapIndex = lo - 1;
 
     for (let i = lo; i <= hi; i++) {
         if (arr[i] <= arr[hi]) {
             swapIndex++;
-            swap(arr, i, swapIndex);
+            swap(i, swapIndex, arr);
         }
     }
 
     return swapIndex;
 };
 
-const sort = ({ arr, lo, hi }: { arr: number[]; lo: number; hi: number }) => {
+const sort = ({ lo, hi, arr }: { lo: number; hi: number; arr: number[] }) => {
     if (lo < hi) {
-        const pivot = getPivot({ arr, lo, hi });
-        sort({ arr, lo: pivot + 1, hi });
-        sort({ arr, lo, hi: pivot - 1 });
+        const pivot = getPivot({ lo, hi, arr });
+        sort({ lo: pivot + 1, hi, arr });
+        sort({ lo, hi: pivot - 1, arr });
     }
 };
 
 export default function quick_sort(arr: number[]): void {
-    sort({ arr, lo: 0, hi: arr.length - 1 });
+    sort({ lo: 0, hi: arr.length - 1, arr });
 }
