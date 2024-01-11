@@ -3,42 +3,39 @@ export default function bfs(
     source: number,
     needle: number,
 ): number[] | null {
-    const prev = new Array(graph.length).fill(-1);
-
+    const path: number[] = new Array(graph.length).fill(-1);
     const q = [source];
 
     do {
-        const curr = q.shift();
-
-        if (curr == undefined) {
-            break;
-        }
+        const curr = q.shift() as number;
 
         if (curr === needle) {
             break;
         }
 
-        const adjs = graph[curr];
-        for (let i = 0; i < adjs.length; i++) {
-            if (adjs[i] === 0) {
+        const edges = graph[curr];
+        for (let i = 0; i < edges.length; i++) {
+            const edgeVal = edges[i];
+
+            if (edgeVal === 0) {
                 continue;
             }
 
-            if (prev[i] !== -1) {
+            if (path.includes(i)) {
                 continue;
             }
 
-            prev[i] = curr;
+            path[i] = curr;
             q.push(i);
         }
     } while (q.length);
 
     let curr = needle;
-    const out: number[] = [];
+    const out = [];
 
-    while (prev[curr] !== -1) {
+    while (path[curr] !== -1) {
         out.push(curr);
-        curr = prev[curr];
+        curr = path[curr];
     }
 
     if (out.length) {
