@@ -3,11 +3,9 @@ export default function bfs(
     source: number,
     needle: number,
 ): number[] | null {
-    const seen = new Array(graph.length).fill(false);
     const prev = new Array(graph.length).fill(-1);
 
     const q = [source];
-    seen[source] = true;
 
     do {
         const curr = q.shift();
@@ -26,11 +24,10 @@ export default function bfs(
                 continue;
             }
 
-            if (seen[i]) {
+            if (prev[i] !== -1) {
                 continue;
             }
 
-            seen[i] = true;
             prev[i] = curr;
             q.push(i);
         }
