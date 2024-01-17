@@ -3,13 +3,13 @@ const walk = (
     curr: number,
     needle: number,
     path: number[],
-    seen: boolean[],
+    prev: boolean[],
 ): boolean => {
-    if (seen[curr]) {
+    if (prev[curr]) {
         return false;
     }
 
-    seen[curr] = true;
+    prev[curr] = true;
 
     path.push(curr);
     if (curr === needle) {
@@ -19,7 +19,7 @@ const walk = (
     const edges = graph[curr];
     for (let i = 0; i < edges.length; i++) {
         const edge = edges[i];
-        if (walk(graph, edge.to, needle, path, seen)) {
+        if (walk(graph, edge.to, needle, path, prev)) {
             return true;
         }
     }
@@ -35,14 +35,13 @@ export default function dfs(
     needle: number,
 ): number[] | null {
     const path: number[] = [];
-    const seen: boolean[] = new Array(graph.length).fill(false);
+    const prev = new Array(graph.length).fill(false);
 
-    const gotIt = walk(graph, source, needle, path, seen);
+    const gotIt = walk(graph, source, needle, path, prev);
 
-    if (!gotIt) {
-        return null;
+    if (gotIt) {
+        return path;
     }
 
-    return path;
+    return null;
 }
-
