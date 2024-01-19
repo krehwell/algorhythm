@@ -1,20 +1,21 @@
-const hasUnvisited = (seen: boolean[], dists: number[]) => {
+const hasUnvisited = (seen: boolean[], dists: number[]): boolean => {
     return seen.some((s, i) => !s && dists[i] < Infinity);
 };
 
-const getLowestsUnvisited = (seen: boolean[], dists: number[]) => {
+const getLowestUnvisited = (seen: boolean[], dists: number[]): number => {
     let idx = -1;
     let lowest = Infinity;
 
-    for (let i = 0; i < seen.length; i++) {
+    for (let i = 0; i < dists.length; i++) {
         if (seen[i]) {
             continue;
         }
 
-        const curr = dists[i];
-        if (curr < lowest) {
-            lowest = curr;
+        let d = dists[i];
+
+        if (d < lowest) {
             idx = i;
+            lowest = d;
         }
     }
 
@@ -26,28 +27,24 @@ export default function dijkstra_list(
     sink: number,
     arr: WeightedAdjacencyList,
 ): number[] {
-    const seen = new Array(arr.length).fill(false);
+    const seen: boolean[] = new Array(arr.length).fill(false);
+    const prev: number[] = new Array(arr.length).fill(-1);
     const dists = new Array(arr.length).fill(Infinity);
-    const prev = new Array(arr.length).fill(-1);
     dists[source] = 0;
 
     while (hasUnvisited(seen, dists)) {
-        const curr = getLowestsUnvisited(seen, dists);
+        const curr = getLowestUnvisited(seen, dists);
 
         seen[curr] = true;
 
         const adjs = arr[curr];
         for (let i = 0; i < adjs.length; i++) {
             const edge = adjs[i];
+            const dist = dists[curr] + edge.weight;
 
-            if (seen[edge.to]) {
-                continue;
-            }
-
-            const dist = curr + edge.weight;
             if (dist < dists[edge.to]) {
-                dists[edge.to] = dist;
                 prev[edge.to] = curr;
+                dists[edge.to] = dist;
             }
         }
     }

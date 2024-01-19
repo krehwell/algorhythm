@@ -1,9 +1,11 @@
+import _default from "ts-jest";
+
 export default function bfs(
     graph: WeightedAdjacencyMatrix,
     source: number,
     needle: number,
 ): number[] | null {
-    const path: number[] = new Array(graph.length).fill(-1);
+    const prev = new Array(graph.length).fill(-1);
     const q = [source];
 
     do {
@@ -13,34 +15,33 @@ export default function bfs(
             break;
         }
 
-        const edges = graph[curr];
-        for (let i = 0; i < edges.length; i++) {
-            const edgeVal = edges[i];
-
-            if (edgeVal === 0) {
+        const adjs = graph[curr];
+        for (let i = 0; i < adjs.length; i++) {
+            if (prev[i] !== -1) {
                 continue;
             }
 
-            if (path.includes(i)) {
+            if (adjs[i] === 0) {
                 continue;
             }
 
-            path[i] = curr;
             q.push(i);
+            prev[i] = curr;
         }
     } while (q.length);
 
+    if (prev[needle] === -1) {
+        return null;
+    }
+
+    const out: number[] = [];
     let curr = needle;
-    const out = [];
 
-    while (path[curr] !== -1) {
+    while (prev[curr] !== -1) {
         out.push(curr);
-        curr = path[curr];
+        curr = prev[curr];
     }
 
-    if (out.length) {
-        return [source].concat(out.reverse());
-    }
-
-    return null;
+    out.push(source);
+    return out.reverse();
 }
